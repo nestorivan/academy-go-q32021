@@ -1,16 +1,17 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nestorivan/academy-go-q32021/domain/model"
-	interactor "github.com/nestorivan/academy-go-q32021/interactors"
+	"github.com/nestorivan/academy-go-q32021/interactor"
 )
 
 
 type pokemonController struct {
-  csvInteractor interactor.CsvInteractor
+  PokemonInteractor interactor.PokemonInteractor
 }
 
 type PokemonController interface {
@@ -18,14 +19,18 @@ type PokemonController interface {
   CreatePokemons() gin.HandlerFunc
 }
 
-func NewPokemonController(ci interactor.CsvInteractor) PokemonController{
-  return &pokemonController{ci}
+func NewPokemonController(pi interactor.PokemonInteractor) PokemonController{
+  return &pokemonController{pi}
 }
 
 func (pk *pokemonController) GetPokemons() gin.HandlerFunc {
   return func(c *gin.Context) {
+    fmt.Println("hi")
+
     id := c.Param("id")
-    pkml, err := pk.csvInteractor.ReadCsv()
+    pkml, err := pk.PokemonInteractor.Get(id)
+
+    println("pokemon:", pkml)
 
     if (err != nil){
       c.AbortWithStatus(http.StatusInternalServerError)
@@ -58,7 +63,7 @@ func (pk *pokemonController) CreatePokemons() gin.HandlerFunc {
       c.Status(http.StatusBadRequest)
     }
 
-    pk.csvInteractor.WriteCsv(pkmn)
+    pk.PokemonInteractor.Create(pkmn)
 
     c.Status(http.StatusOK)
   }
