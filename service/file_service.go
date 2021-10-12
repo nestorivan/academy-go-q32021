@@ -9,7 +9,7 @@ type fileService struct {
 }
 
 type FileService interface {
-  ReadCsv(path string) (*os.File, error)
+  ReadFile(path string) (*os.File, error)
 }
 
 func NewFileService() FileService {
@@ -17,7 +17,7 @@ func NewFileService() FileService {
 }
 
 // ReadCsv - will try to open file. Will create file instead if not found.
-func (fi *fileService) ReadCsv(fp string) (*os.File, error) {
+func (fi *fileService) ReadFile(fp string) (*os.File, error) {
   csv, err := os.OpenFile(fp, os.O_CREATE, 0666)
 
   if err != nil {
