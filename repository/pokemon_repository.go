@@ -45,7 +45,7 @@ func (pr *pokemonRepo) getPokemonFromFile(f *os.File) ([]model.Pokemon, error){
 }
 
 func (pr *pokemonRepo) Get(id string) ([]model.Pokemon, error){
-  f, err := pr.fileService.ReadCsv("pokemon.csv")
+  f, err := pr.fileService.ReadFile("pokemon.csv")
 
   if err != nil {
     return nil, err
@@ -62,7 +62,7 @@ func (pr *pokemonRepo) Get(id string) ([]model.Pokemon, error){
 }
 
 func (pr *pokemonRepo) Save(p model.Pokemon) ([]model.Pokemon, error){
-  f, err := pr.fileService.ReadCsv("pokemon.csv")
+  f, err := pr.fileService.ReadFile("pokemon.csv")
 
   if (err != nil){
     fmt.Println(err)
