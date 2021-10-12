@@ -13,7 +13,7 @@ func (r *registry) NewPokemonController() controller.PokemonController {
 }
 
 func (r *registry) NewPokemonInteractor() interactor.PokemonInteractor {
-  fs := service.NewFileService()
+  fs := r.NewFileService()
   pkr := r.NewPokemonRepository(fs)
   return interactor.NewPokemonInteractor(pkr)
 }
