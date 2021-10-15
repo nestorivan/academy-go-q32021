@@ -3,8 +3,11 @@ package repository
 import (
 	"encoding/csv"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strconv"
 
+	"github.com/jszwec/csvutil"
 	"github.com/nestorivan/academy-go-q32021/domain/model"
 	"github.com/nestorivan/academy-go-q32021/service"
 )
@@ -23,23 +26,13 @@ func NewPokemokemonRepo(fi service.FileService) PokemonRepo {
 }
 
 func (pr *pokemonRepo) getPokemonFromFile(f *os.File) ([]model.Pokemon, error){
-  r := csv.NewReader(f)
+  var pkmList []model.Pokemon
 
-  pkmList := []model.Pokemon{}
+  fb, _ := ioutil.ReadAll(f)
 
-  values,err := r.ReadAll()
-
-  if err != nil {
-    return nil, err
-  }
-
-  for _, p := range values {
-    pm := model.Pokemon{
-      Id: p[0],
-      Name: p[1],
-    }
-    pkmList = append(pkmList, pm)
-  }
+	if err := csvutil.Unmarshal(fb, &pkmList); err != nil {
+		return nil, err
+	}
 
   return pkmList, nil
 }
@@ -52,8 +45,6 @@ func (pr *pokemonRepo) Get(id string) ([]model.Pokemon, error){
   }
 
   pkmList, _ := pr.getPokemonFromFile(f)
-
-  fmt.Println("hello from repo")
 
   //close file after func closes
   defer f.Close()
@@ -75,7 +66,7 @@ func (pr *pokemonRepo) Save(p model.Pokemon) ([]model.Pokemon, error){
 
   for _, p := range pkmList {
     var row []string
-    row = append(row, p.Id)
+    row = append(row, strconv.Itoa(p.Id))
     row = append(row, p.Name)
     w.Write(row)
   }
