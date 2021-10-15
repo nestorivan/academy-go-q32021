@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nestorivan/academy-go-q32021/domain/model"
@@ -25,12 +25,11 @@ func NewPokemonController(pi interactor.PokemonInteractor) PokemonController{
 
 func (pk *pokemonController) GetPokemons() gin.HandlerFunc {
   return func(c *gin.Context) {
-    fmt.Println("hi")
+
+    // p := c.Request.URL.Query()
 
     id := c.Param("id")
     pkml, err := pk.PokemonInteractor.Get(id)
-
-    println("pokemon:", pkml)
 
     if (err != nil){
       c.AbortWithStatus(http.StatusInternalServerError)
@@ -44,7 +43,7 @@ func (pk *pokemonController) GetPokemons() gin.HandlerFunc {
     pkm := model.Pokemon{};
 
     for _, p := range pkml{
-      if (p.Id == id){
+      if (strconv.Itoa(p.Id) == id){
         pkm = p
       }
     }
