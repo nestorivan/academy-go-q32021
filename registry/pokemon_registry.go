@@ -23,5 +23,5 @@ func (r *registry) NewPokemonPresenter() presenter.PokemonPresenter {
 }
 
 func (r *registry) NewPokemonRepository(fs service.FileService) repository.PokemonRepo {
-  return repository.NewPokemokemonRepo(fs)
+  return repository.NewPokemonRepo(fs)
 }
