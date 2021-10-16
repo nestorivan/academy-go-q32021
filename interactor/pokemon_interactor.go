@@ -11,6 +11,7 @@ type pokemonInteractor struct {
 
 type PokemonInteractor interface{
   Get(id string) ([]model.Pokemon, error)
+  GetAsync(ap model.AsyncParams) ([]model.Pokemon, error)
   Create(pkm model.Pokemon) error
 }
 
@@ -36,4 +37,14 @@ func (pi *pokemonInteractor) Create(pkm model.Pokemon) error {
   }
 
   return nil
+}
+
+func (pi *pokemonInteractor) GetAsync(ap model.AsyncParams) ([]model.Pokemon, error) {
+  pkmList, err := pi.PokemonRepo.GetAsync(ap)
+
+  if err != nil{
+    return nil, err
+  }
+
+  return pkmList, nil
 }
