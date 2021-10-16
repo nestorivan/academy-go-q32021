@@ -17,6 +17,7 @@ type pokemonController struct {
 type PokemonController interface {
   GetPokemons() gin.HandlerFunc
   CreatePokemons() gin.HandlerFunc
+  GetPokemonsAsync() gin.HandlerFunc
 }
 
 func NewPokemonController(pi interactor.PokemonInteractor) PokemonController{
@@ -25,9 +26,6 @@ func NewPokemonController(pi interactor.PokemonInteractor) PokemonController{
 
 func (pk *pokemonController) GetPokemons() gin.HandlerFunc {
   return func(c *gin.Context) {
-
-    // p := c.Request.URL.Query()
-
     id := c.Param("id")
     pkml, err := pk.PokemonInteractor.Get(id)
 
@@ -65,5 +63,27 @@ func (pk *pokemonController) CreatePokemons() gin.HandlerFunc {
     pk.PokemonInteractor.Create(pkmn)
 
     c.Status(http.StatusOK)
+  }
+}
+
+
+func (pk *pokemonController) GetPokemonsAsync() gin.HandlerFunc{
+  return func(c *gin.Context){
+    var ap model.AsyncParams
+    var pkmList []model.Pokemon
+    var err error
+
+    if c.ShouldBind(&ap) == nil {
+      pkmList, err = pk.PokemonInteractor.GetAsync(ap)
+
+      if err != nil{
+      c.JSON(http.StatusInternalServerError, err)
+      }
+
+      c.JSON(http.StatusOK, pkmList)
+
+    } else {
+      c.Status(http.StatusBadRequest)
+    }
   }
 }

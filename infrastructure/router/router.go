@@ -14,6 +14,7 @@ func NewRouter(c controller.AppController) *gin.Engine {
   r.Handle(http.MethodGet, "/pokemon/", c.Pokemon.GetPokemons())
   r.Handle(http.MethodGet, "/pokemon/:id", c.Pokemon.GetPokemons())
   r.Handle(http.MethodPost, "/pokemon", c.Pokemon.CreatePokemons())
+  r.Handle(http.MethodGet, "/pokemonasync", c.Pokemon.GetPokemonsAsync())
 
   r.Handle(http.MethodGet, "weather/:city", c.Weather.GetWeather())
 
